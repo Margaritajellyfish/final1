@@ -9,7 +9,12 @@
 
 using namespace std;
 
-static const string names[] = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona", "George", "Hannah"};
+static const string names[] = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona", "George", "Hannah",
+"Isla", "Jack", "Karen", "Liam", "Mia", "Noah", "Olivia", "Peter",
+"Quinn", "Rachel", "Sam", "Tina", "Uma", "Victor", "Wendy", "Xavier",
+"Yvonne", "Zack", "Aaron", "Bella", "Cameron", "Daisy", "Elijah", "Faith",
+"Gavin", "Hailey", "Ian", "Jasmine", "Kyle", "Lily", "Mason", "Nora",
+"Owen", "Piper", "Ryan", "Sophie", "Tyler", "Violet", "Wyatt", "Zoey"};
 static const string cOrders[] = {"Latte", "Cappuccino", "Espresso", "Americano", "Mocha"};
 static const string mOrders[] = {"Blueberry muffin", "Chocolate chip muffin", "Banana nut muffin"};
 static const string bOrders[] = {"Bracelet A", "Bracelet B", "Bracelet C", "Bracelet D"};
@@ -144,7 +149,36 @@ public:
 
 };
 
+class Pqueue {
+private:
+    map<int, Cus> mp;
+    int count;
+public:
+    Pqueue() : count(1) {}
 
+    void enter(const string &name, const string &order) {
+        mp[count++] = Cus{name, order};
+    }
+    void serveCustomer() {
+        if (mp.empty()) {
+            return;
+        }
+        auto it = mp.begin(); 
+        cout << "Serving " << it->second.name << " " << it->second.order << ".\n";
+        mp.erase(it);
+    }
+    void print() const {
+        cout << "[Pizza Booth Queue]: ";
+        if (mp.empty()) {
+            cout << "(empty)";
+        } else {    
+            for (auto &i : mp) {
+                cout << i.second.name << "(" << i.second.order << ") ";
+            }
+        }
+        cout << "\n";
+    }
+};
 
 int main(){
     srand(static_cast<unsigned>(time(NULL)));
@@ -152,31 +186,39 @@ int main(){
     Cqueue coffeeBooth;
     Mqueue muffinBooth;
     Bqueue braceletBooth;
+    Pqueue pizzaBooth;
     for (int i = 0; i < 3; i++) {
         coffeeBooth.enter(randoms(names),randoms(cOrders));
         muffinBooth.enter(randoms(names), randoms(mOrders));
         braceletBooth.enter(randoms(names), randoms(bOrders));
+        pizzaBooth.enter(randoms(names), randoms(pOrders));
     }
     for (int round = 1; round <= 10; round++) {
         cout << "=== Round " << round << " ===\n";
         coffeeBooth.serveCustomer();
         muffinBooth.serveCustomer();
         braceletBooth.serveCustomer();
+        pizzaBooth.serveCustomer();
         if (chance()) {
             coffeeBooth.enter(randoms(names), randoms(cOrders));
-            cout << "A new customer joined.\n";
+            cout << "A new customer joined coffee queue.\n";
         }
         if (chance()) {
-            muffinBooth.enter(randoms(names), randoms(cOrders));
-            cout << "A new customer joined.\n";
+            muffinBooth.enter(randoms(names), randoms(mOrders));
+            cout << "A new customer joined muffin queue.\n";
         }
         if (chance()) {
-            braceletBooth.enter(randoms(names), randoms(cOrders));
-            cout << "A new customer joined.\n";
+            braceletBooth.enter(randoms(names), randoms(bOrders));
+            cout << "A new customer joined bracelate queue.\n";
+        }
+        if (chance()) {
+            pizzaBooth.enter(randoms(names), randoms(pOrders));
+            cout << "A new customer joined pizza queue.\n";
         }
         coffeeBooth.print();
         muffinBooth.print();
         braceletBooth.print();
+        pizzaBooth.print();
         cout << "\n";
     }
 
