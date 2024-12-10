@@ -5,18 +5,31 @@
 #include<string>
 #include<ctime>
 #include<cstdlib>
+#include<map>
 
 using namespace std;
+
+static const string names[] = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona", "George", "Hannah"};
+static const string cOrders[] = {"Latte", "Cappuccino", "Espresso", "Americano", "Mocha"};
+static const string mOrders[] = {"Blueberry muffin", "Chocolate chip muffin", "Banana nut muffin"};
+static const string bOrders[] = {"Bracelet A", "Bracelet B", "Bracelet C", "Bracelet D"};
+static const string pOrders[] = {"Margherita", "Pepperoni", "Hawaiian", "Veggie", "BBQ Chicken"};
+
+template <size_t N>
+string randoms(const string(&arr)[N]) {
+    return arr[rand() % N];
+}
+bool chance(){
+    srand(time(0));
+    int value = rand() % 100 + 1;
+    return value > 50;
+}
 
 struct CoffeeCus{
     string name;
     string order;
     CoffeeCus *next;
 };
-static const string names[] = {"Alice", "Bob", "Charlie", "Diana", "Ethan", "Fiona", "George", "Hannah"};
-static const string cOrders[] = {"Latte", "Cappuccino", "Espresso", "Americano", "Mocha"};
-static const string mOrders[] = {"Blueberry muffin", "Chocolate chip muffin", "Banana nut muffin"};
-
 class Cqueue{
 private:
     CoffeeCus* head;
@@ -80,13 +93,13 @@ public:
         dq.push_back(Cus{name, order});
     }
 
-    bool serveCustomer() {
+    void serveCustomer() {
         if (dq.empty()) {
             return;
         }
         cout << "Serving " << dq.front().name << " " << dq.front().order << ".\n";
         dq.pop_front();
-        return true;
+        return;
     }
 
     void print() const {
@@ -100,33 +113,69 @@ public:
         }
         cout << "\n";
     }
+};
+class Bqueue {
+private:
+    vector<Cus> vec;
+public:
+    void enter(const string &name, const string &order) {
+        vec.push_back(Cus{name, order});
+    }
 
-template <size_t N>
-string randoms(string(&arr)[N]) {
-    return arr[rand() % N];
-}
-bool chance(){
-    srand(time(0));
-    int value = rand() % 100 + 1;
-    return value > 50;
-}
+    void serveCustomer() {
+        if (vec.empty()) {
+            return;
+        }
+        cout << "Serving " << vec.front().name << " " << vec.front().order << ".\n";
+        vec.erase(vec.begin());
+        return;
+    }
+
+    void print() const {
+        cout << "[Bracelet Booth Queue]: ";
+        if (vec.empty()) {
+            cout << "(empty)";
+        } else {
+            for (auto &cust : vec) {
+                cout << cust.name << "(" << cust.order << ") ";
+            }
+        }
+        cout << "\n";
+    }
+
+};
+
+
 
 int main(){
     Cqueue coffeeBooth;
+    Mqueue muffinBooth;
+    Bqueue braceletBooth;
     for (int i = 0; i < 3; i++) {
-        coffeeBooth.enter(
-            randoms(names),
-            randoms(cOrders)
-        );
+        coffeeBooth.enter(randoms(names),randoms(cOrders));
+        muffinBooth.enter(randoms(names), randoms(mOrders));
+        braceletBooth.enter(randoms(names), randoms(bOrders));
     }
     for (int round = 1; round <= 10; round++) {
         cout << "=== Round " << round << " ===\n";
         coffeeBooth.serveCustomer();
+        muffinBooth.serveCustomer();
+        braceletBooth.serveCustomer();
         if (chance()) {
             coffeeBooth.enter(randoms(names), randoms(cOrders));
             cout << "A new customer joined.\n";
         }
+        if (chance()) {
+            muffinBooth.enter(randoms(names), randoms(cOrders));
+            cout << "A new customer joined.\n";
+        }
+        if (chance()) {
+            braceletBooth.enter(randoms(names), randoms(cOrders));
+            cout << "A new customer joined.\n";
+        }
         coffeeBooth.print();
+        muffinBooth.print();
+        braceletBooth.print();
         cout << "\n";
     }
 
