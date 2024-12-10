@@ -30,4 +30,31 @@ public:
             delete temp;
         }
     }
+    void enter(string &name, string &order) {
+        CoffeeCus* newNode = new CoffeeCus{ name, order, nullptr };
+        if (tail == nullptr) {
+            head = tail = newNode;
+        } else {
+            tail->next = newNode;
+            tail = newNode;
+        }
+    }
+    void print() const {
+        CoffeeCus* current = head;
+        cout << "[Coffee Booth Queue]: ";
+        if (current == nullptr) {
+            cout << "(empty)";
+        }
+        while (current != nullptr) {
+            cout << current->name << "(" << current->order << ") ";
+            current = current->next;
+        }
+        cout << "\n";
+    }
+
 };
+
+int main(){
+
+    return 0;
+}
