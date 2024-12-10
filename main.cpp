@@ -63,14 +63,43 @@ public:
         tail = nullptr;
     }
     delete temp; 
-    if (chance()){
-        enter(head, tail, randoms(names), randoms(cOrders));
-            cout << "A new customer joined.\n";
+    
     }
-}
-
-
 };
+
+struct Cus {
+    string name;
+    string order;
+};
+
+class Mqueue {
+private:
+    deque<Cus> dq;
+public:
+    void enter(const string &name, const string &order) {
+        dq.push_back(Cus{name, order});
+    }
+
+    bool serveCustomer() {
+        if (dq.empty()) {
+            return;
+        }
+        cout << "Serving " << dq.front().name << " " << dq.front().order << ".\n";
+        dq.pop_front();
+        return true;
+    }
+
+    void print() const {
+        cout << "[Muffin Booth Queue]: ";
+        if (dq.empty()) {
+            cout << "(empty)";
+        } else {
+            for (auto &cust : dq) {
+                cout << cust.name << "(" << cust.order << ") ";
+            }
+        }
+        cout << "\n";
+    }
 
 template <size_t N>
 string randoms(string(&arr)[N]) {
@@ -89,6 +118,16 @@ int main(){
             randoms(names),
             randoms(cOrders)
         );
+    }
+    for (int round = 1; round <= 10; round++) {
+        cout << "=== Round " << round << " ===\n";
+        coffeeBooth.serveCustomer();
+        if (chance()) {
+            coffeeBooth.enter(randoms(names), randoms(cOrders));
+            cout << "A new customer joined.\n";
+        }
+        coffeeBooth.print();
+        cout << "\n";
     }
 
 
