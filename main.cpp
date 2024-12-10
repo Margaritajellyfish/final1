@@ -20,7 +20,6 @@ string randoms(const string(&arr)[N]) {
     return arr[rand() % N];
 }
 bool chance(){
-    srand(time(0));
     int value = rand() % 100 + 1;
     return value > 50;
 }
@@ -44,7 +43,7 @@ public:
             delete temp;
         }
     }
-    void enter(string &name, string &order) {
+    void enter(const string &name, const string &order) {
         CoffeeCus* newNode = new CoffeeCus{ name, order, nullptr };
         if (tail == nullptr) {
             head = tail = newNode;
@@ -65,7 +64,7 @@ public:
         }
         cout << "\n";
     }
-    void serveCustomer(CoffeeCus*& head, CoffeeCus*& tail) {
+    void serveCustomer() {
     if (head == nullptr) {
         return;
     }
@@ -148,6 +147,8 @@ public:
 
 
 int main(){
+    srand(static_cast<unsigned>(time(NULL)));
+
     Cqueue coffeeBooth;
     Mqueue muffinBooth;
     Bqueue braceletBooth;
