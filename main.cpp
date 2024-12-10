@@ -4,6 +4,7 @@
 #include<vector>
 #include<string>
 #include<ctime>
+#include<cstdlib>
 
 using namespace std;
 
@@ -51,10 +52,45 @@ public:
         }
         cout << "\n";
     }
+    void serveCustomer(CoffeeCus*& head, CoffeeCus*& tail) {
+    if (head == nullptr) {
+        return;
+    }
+    cout << "Serving " << head->name << " " << head->order << ".\n";
+    CoffeeCus* temp = head;
+    head = head->next;
+    if (head == nullptr) { 
+        tail = nullptr;
+    }
+    delete temp; 
+    if (chance()){
+        enter(head, tail, randoms(names), randoms(cOrders));
+            cout << "A new customer joined.\n";
+    }
+}
+
 
 };
 
+template <size_t N>
+string randoms(string(&arr)[N]) {
+    return arr[rand() % N];
+}
+bool chance(){
+    srand(time(0));
+    int value = rand() % 100 + 1;
+    return value > 50;
+}
+
 int main(){
+    Cqueue coffeeBooth;
+    for (int i = 0; i < 3; i++) {
+        coffeeBooth.enter(
+            randoms(names),
+            randoms(cOrders)
+        );
+    }
+
 
     return 0;
 }
